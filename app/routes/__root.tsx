@@ -1,4 +1,3 @@
-// app/routes/__root.tsx
 import type { ReactNode } from 'react'
 import {
   Outlet,
@@ -6,6 +5,10 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router'
+
+import appCss from "@/styles/app.css?url"
+import Appbar from '@/components/Appbar'
+import { ThemeProvider } from '@/theme-provider'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,9 +21,15 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'ExerciseRight | Get Personalised AI Coach',
       },
     ],
+    links: [
+      {
+        rel: 'stylesheet',
+        href: appCss
+      }
+    ]
   }),
   component: RootComponent,
 })
@@ -35,14 +44,20 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html>
+    <html lang='en' suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
+      <ThemeProvider
+        defaultTheme="dark"
+        storageKey="vite-ui-theme"
+      >
+        <body>
+          <Appbar />
+          {children}
+          <Scripts />
+        </body>
+      </ThemeProvider>
     </html>
   )
 }

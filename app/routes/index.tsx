@@ -1,48 +1,25 @@
-// app/routes/index.tsx
-import * as fs from 'node:fs'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
-
-const filePath = 'count.txt'
-
-async function readCount() {
-  return parseInt(
-    await fs.promises.readFile(filePath, 'utf-8').catch(() => '0'),
-  )
-}
-
-const getCount = createServerFn({
-  method: 'GET',
-}).handler(() => {
-  return readCount()
-})
-
-const updateCount = createServerFn({ method: 'POST' })
-  .validator((d: number) => d)
-  .handler(async ({ data }) => {
-    const count = await readCount()
-    await fs.promises.writeFile(filePath, `${count + data}`)
-  })
+import { Button } from '@/components/ui/button'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  component: Home,
-  loader: async () => await getCount(),
+  component: RouteComponent,
 })
 
-function Home() {
-  const router = useRouter()
-  const state = Route.useLoaderData()
-
+function RouteComponent() {
   return (
-    <button
-      type="button"
-      onClick={() => {
-        updateCount({ data: 1 }).then(() => {
-          router.invalidate()
-        })
-      }}
-    >
-      Add 1 to {state}?
-    </button>
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">Welcome to ExerciseRight</h1>
+        <p className="text-lg mb-8">Get Personalised AI Coach</p>
+        <Button
+          variant="outline"
+          size="lg"
+          className="px-6 py-3 text-lg font-semibold"
+        >
+          Get Started
+        </Button>
+
+      </div>
+    </div>
   )
 }
