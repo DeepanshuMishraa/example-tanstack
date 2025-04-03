@@ -9,6 +9,7 @@ import {
 import appCss from "@/styles/app.css?url"
 import Appbar from '@/components/Appbar'
 import { ThemeProvider } from '@/theme-provider'
+import QueryProvider from '@/query-provider'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -53,8 +54,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         storageKey="vite-ui-theme"
       >
         <body>
+          <QueryProvider>
           <Appbar />
           {children}
+          </QueryProvider>
           <Scripts />
         </body>
       </ThemeProvider>
