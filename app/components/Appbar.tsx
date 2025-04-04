@@ -69,8 +69,8 @@ const Appbar = () => {
         )}
         <Button 
           onClick={() => {
-            window.location.href = "https://github.com/DeepanshuMishraa";
             setIsMenuOpen(false);
+            window.location.href = "https://github.com/DeepanshuMishraa";
           }}
         >
           Github
