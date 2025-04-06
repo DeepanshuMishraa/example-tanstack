@@ -4,8 +4,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { authClient } from "@/lib/auth-client"
 import { DamIcon } from "lucide-react";
 import { FaGoogle } from "react-icons/fa"
+import { useNavigate } from "@tanstack/react-router";
 
 export default function AuthCard() {
+
+  const navigate = useNavigate()
 
 
   const handleGoogleSignIn = async () => {
@@ -18,6 +21,7 @@ export default function AuthCard() {
       console.error('Sign in error:', error);
     }
   };
+
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
@@ -37,11 +41,19 @@ export default function AuthCard() {
             <Button
               variant="outline"
               className="w-full relative overflow-hidden group transition-all duration-200"
-              onClick={handleGoogleSignIn}
+              onClick={async () => {
+                await authClient.oneTap({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      navigate({ to: "/dashboard" })
+                    }
+                  }
+                })
+              }}
             >
               <div className="absolute inset-0 w-0 bg-gradient-to-r from-background to-muted-foreground/10 group-hover:w-full transition-all duration-300 opacity-20" />
               <div className="flex items-center justify-center gap-2 relative z-10">
-                <FaGoogle  className="h-4 w-4" />
+                <FaGoogle className="h-4 w-4" />
                 Continue with Google
               </div>
             </Button>
