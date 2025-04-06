@@ -2,8 +2,9 @@ import { DatePicker } from '@/components/date-picker'
 import { EmptyState } from '@/components/EmptyState'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useExercises } from '@/hooks/use-exercises'
+import { useExercises, useRefreshExercises } from '@/hooks/use-exercises'
 import { AnalyseText } from '@/lib/actions'
+import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { Loader2, SendIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -15,35 +16,26 @@ export const Route = createFileRoute('/dashboard')({
 
 function Dashboard() {
   const [info, setInfo] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { data: exercises = [], isLoading, isError, error } = useExercises();
+  const { data: exercises = [], isLoading, isError } = useExercises();
+  const refreshExercises = useRefreshExercises();
 
-  const handleSubmit = async () => {
-    if (!info.trim()) return;
-
-    try {
-      setLoading(true);
+  const mutation = useMutation({
+    mutationFn: async () => {
       await AnalyseText({
         data: {
           text: info
         }
-      });
+      },
+      );
+    },
+    onSuccess: async () => {
       setInfo("");
       toast.success("Logged");
-    } catch (err) {
-      toast.error("Failed");
-    } finally {
-      setLoading(false);
+      await refreshExercises();
     }
-  };
+  })
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
 
   if (isLoading) {
     return <div className="fixed inset-0 grid place-items-center"><Loader2 className="animate-spin w-6 h-6" /></div>
@@ -89,19 +81,25 @@ function Dashboard() {
         <div className="max-w-md mx-auto flex gap-2">
           <Input
             value={info}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && info.trim().length > 0 && !mutation.isPending) {
+                mutation.mutate();
+              }
+            }}
             onChange={(e) => setInfo(e.target.value)}
-            onKeyDown={handleKeyDown}
             placeholder="What did you do today?"
             className="flex-1 bg-muted/30 border-border/30 focus-visible:ring-1 h-10"
           />
           <Button
-            onClick={handleSubmit}
-            disabled={loading || !info.trim()}
+            onClick={() => {
+              mutation.mutate()
+            }}
+            disabled={mutation.isPending || info.length === 0}
             size="sm"
             variant="ghost"
             className="h-10 w-10 p-0 rounded-full bg-primary/10 hover:bg-primary/20"
           >
-            {loading ?
+            {mutation.isPending ?
               <Loader2 className="h-4 w-4 animate-spin" /> :
               <SendIcon className="h-4 w-4" />
             }
