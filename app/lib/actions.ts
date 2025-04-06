@@ -27,7 +27,7 @@ export const AnalyseText = createServerFn({
   // better - auth.session_token
 
   const session = await auth.api.getSession({
-    headers: await getHeaders(),
+    headers: await getHeaders() as any,
   })
 
   if (!session?.user) {
