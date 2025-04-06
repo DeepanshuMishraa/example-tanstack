@@ -9,9 +9,6 @@ import { analyseTextType } from "@/types/types";
 import { desc, eq } from "drizzle-orm";
 import { Exercise } from "@/hooks/use-exercises";
 
-
-
-
 export const AnalyseText = createServerFn({
   method: 'POST',
   response: 'data',

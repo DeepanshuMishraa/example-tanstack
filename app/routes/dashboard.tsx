@@ -55,12 +55,9 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col p-4 sm:p-6 relative">
-      {/* Minimalist date picker */}
       <div className="mx-auto mb-6">
         <DatePicker />
       </div>
-
-      {/* Content area */}
       <div className="flex-1 w-full max-w-screen-md mx-auto">
         {exercises.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -88,7 +85,6 @@ function Dashboard() {
         )}
       </div>
 
-      {/* Fixed input at bottom */}
       <div className="fixed bottom-0 inset-x-0 p-4 bg-background">
         <div className="max-w-md mx-auto flex gap-2">
           <Input
