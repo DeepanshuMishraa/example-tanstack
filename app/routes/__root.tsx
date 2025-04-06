@@ -10,6 +10,7 @@ import appCss from "@/styles/app.css?url"
 import Appbar from '@/components/Appbar'
 import { ThemeProvider } from '@/theme-provider'
 import QueryProvider from '@/query-provider'
+import { Toaster } from '@/components/ui/sonner'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -55,8 +56,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       >
         <body>
           <QueryProvider>
-          <Appbar />
-          {children}
+            <Appbar />
+            {children}
+            <Toaster />
           </QueryProvider>
           <Scripts />
         </body>

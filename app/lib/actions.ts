@@ -3,45 +3,36 @@ import { generateText } from "ai";
 import { groq } from "@ai-sdk/groq";
 import { auth } from "./auth";
 import { db } from "@/db";
-import { exercises, user } from "@/db/schema";
+import { exercises } from "@/db/schema";
 import { getHeaders } from "@tanstack/react-start/server";
+import { analyseTextType } from "@/types/types";
+import { desc, eq } from "drizzle-orm";
+import { Exercise } from "@/hooks/use-exercises";
+
+
+
 
 export const AnalyseText = createServerFn({
   method: 'POST',
   response: 'data',
-}).validator((data) => {
-  // if (!(data instanceof FormData)) {
-  //   throw new Error('Invalid data type');
-  // }
+}).validator(analyseTextType).handler(async ({ data: { text } }) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await getHeaders() as any,
+    })
 
-  const text = data;
+    if (!session?.user) {
+      throw new Error('Not authenticated');
+    }
+    console.log("Determining action....");
+    console.log(text);
 
-  if (!text) {
-    throw new Error('Text is required');
-  }
+    const model = "llama-3.3-70b-versatile";
 
-  return {
-    text: text.toString(),
-  }
-}).handler(async ({ data: { text } }) => {
-  // better - auth.session_token
-
-  const session = await auth.api.getSession({
-    headers: await getHeaders() as any,
-  })
-
-  if (!session?.user) {
-    throw new Error('Not authenticated');
-  }
-  console.log("Determining action....");
-  console.log(text);
-
-  const model = "llama-3.3-70b-versatile";
-
-  const startTime = Date.now();
-  const response = await generateText({
-    model: groq(model),
-    prompt: `You are an AI that converts casual fitness logs into structured data. 
+    const startTime = Date.now();
+    const response = await generateText({
+      model: groq(model),
+      prompt: `You are an AI that converts casual fitness logs into structured data. 
       Given this log: "${text}"
       
       Create a one-line summary in this exact format:
@@ -56,16 +47,45 @@ export const AnalyseText = createServerFn({
       3. Include basic nutrition for foods
       4. Keep it in exactly one line
       5. Use the exact format with | separators`,
-  });
+    });
 
-  await db.insert(exercises).values({
-    userId: session?.user.id,
-    info: response.text,
-    time: new Date(),
-    id: crypto.randomUUID(),
-  })
+    await db.insert(exercises).values({
+      userId: session?.user.id,
+      info: response.text,
+      time: new Date(),
+      id: crypto.randomUUID(),
+    })
 
-  console.log(response.text);
-  console.log(`Action determined in ${Date.now() - startTime}ms`);
-  return { response: response.text, time: Date.now() - startTime };
+    console.log(response.text);
+    console.log(`Action determined in ${Date.now() - startTime}ms`);
+    return { response: response.text, time: Date.now() - startTime };
+  } catch (err) {
+    return { error: err.message }
+  }
 })
+
+export const getInfo = createServerFn({
+  method: 'GET',
+  response: 'data'
+}).handler(async () => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await getHeaders() as any,
+    });
+
+    if (!session?.user) {
+      throw new Error('Not authenticated');
+    }
+
+    const data = await db
+      .select()
+      .from(exercises)
+      .where(eq(exercises.userId, session.user.id))
+      .orderBy(desc(exercises.time));
+
+    return data as Exercise[];
+  } catch (err) {
+    console.error("Error fetching exercises:", err);
+    return { error: err instanceof Error ? err.message : "Unknown error" };
+  }
+});
