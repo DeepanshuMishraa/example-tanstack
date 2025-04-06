@@ -8,6 +8,69 @@
       "when": 1743710399211,
       "tag": "0000_hard_cargill",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1743776998551,
+      "tag": "0001_useful_bromley",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1743778205794,
+      "tag": "0002_robust_excalibur",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1743941374868,
+      "tag": "0003_rare_punisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1743941527847,
+      "tag": "0004_sad_frightful_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1743941787109,
+      "tag": "0005_natural_husk",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1743941953636,
+      "tag": "0006_dashing_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1743942128255,
+      "tag": "0007_adorable_quicksilver",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1743942229672,
+      "tag": "0008_ancient_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1743942296999,
+      "tag": "0009_gray_queen_noir",
+      "breakpoints": true
     }
   ]
 }
