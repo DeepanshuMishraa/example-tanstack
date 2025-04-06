@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import { createAuthClient } from "better-auth/react"
 import { oneTapClient } from "better-auth/client/plugins";
 
