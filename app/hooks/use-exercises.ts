@@ -1,5 +1,5 @@
 import { getInfo } from "@/lib/actions";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export interface Exercise {
@@ -26,4 +26,9 @@ export function useExercises() {
       return [] as Exercise[];
     }
   })
+}
+
+export function useRefreshExercises() {
+  const queryClient = useQueryClient();
+  return () => queryClient.invalidateQueries({ queryKey: ['exercises'] });
 }
