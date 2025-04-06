@@ -4,9 +4,7 @@ import { groq } from "@ai-sdk/groq";
 import { auth } from "./auth";
 import { db } from "@/db";
 import { exercises, user } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { getHeaders } from "better-auth/react";
-import { authClient } from "./auth-client";
+import { getHeaders } from "@tanstack/react-start/server";
 
 export const AnalyseText = createServerFn({
   method: 'POST',
@@ -26,11 +24,15 @@ export const AnalyseText = createServerFn({
     text: text.toString(),
   }
 }).handler(async ({ data: { text } }) => {
-  const session = await authClient.getSession()
-  if (!session?.data?.user) {
-    throw new Error('Authentication required');
-  }
+  // better - auth.session_token
 
+  const session = await auth.api.getSession({
+    headers: await getHeaders(),
+  })
+
+  if (!session?.user) {
+    throw new Error('Not authenticated');
+  }
   console.log("Determining action....");
   console.log(text);
 
@@ -56,10 +58,11 @@ export const AnalyseText = createServerFn({
       5. Use the exact format with | separators`,
   });
 
-  await db.insert(exercises).values({ 
-    userId: session?.data.user.id, 
-    info: response.text, 
-    time: new Date() 
+  await db.insert(exercises).values({
+    userId: session?.user.id,
+    info: response.text,
+    time: new Date(),
+    id: crypto.randomUUID(),
   })
 
   console.log(response.text);

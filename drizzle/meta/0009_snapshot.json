@@ -1,6 +1,6 @@
 {
-  "id": "9c6e31d4-32bb-4375-b466-0e55d2122c22",
-  "prevId": "aecedbdc-11a9-439f-9c77-6f508a1f7deb",
+  "id": "a5214378-2c87-43b5-b301-e9cec59ad04f",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -125,55 +125,17 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reps": {
-          "name": "reps",
+        "exercise": {
+          "name": "exercise",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "calories": {
-          "name": "calories",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "duration": {
-          "name": "duration",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "time_of_day": {
-          "name": "time_of_day",
+        "logged_at": {
+          "name": "logged_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
-        },
-        "notes": {
-          "name": "notes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
