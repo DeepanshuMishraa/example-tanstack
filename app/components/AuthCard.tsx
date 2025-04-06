@@ -41,15 +41,7 @@ export default function AuthCard() {
             <Button
               variant="outline"
               className="w-full relative overflow-hidden group transition-all duration-200"
-              onClick={async () => {
-                await authClient.oneTap({
-                  fetchOptions: {
-                    onSuccess: () => {
-                      navigate({ to: "/dashboard" })
-                    }
-                  }
-                })
-              }}
+              onClick={handleGoogleSignIn}
             >
               <div className="absolute inset-0 w-0 bg-gradient-to-r from-background to-muted-foreground/10 group-hover:w-full transition-all duration-300 opacity-20" />
               <div className="flex items-center justify-center gap-2 relative z-10">
